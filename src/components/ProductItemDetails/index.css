@@ -1,4 +1,4 @@
-/* Write your CSS here */
+/* Write your CSS here 
 .main-product-details {
   display: flex;
   flex-direction: row;
@@ -7,10 +7,130 @@
   gap: 10px;
   margin: 1%;
 }
-.product-details-image-container{
-    margin-left: 200px ;
+.product-details-image-container {
+  margin-left: 200px;
 }
 .product-details-image {
   height: 100%;
   width: 100%;
 }
+*/
+
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f8f8;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header a {
+  text-decoration: none;
+  color: black;
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+/* Main Product Details */
+.main-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.main-product-details {
+  display: flex;
+  gap: 20px;
+}
+
+.product-details-image-container {
+  flex: 1;
+  text-align: center;
+}
+
+.product-details-image {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+}
+
+.product-details-content {
+  flex: 2;
+}
+
+.product-details-content h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.product-details-content p {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+/* Cart Controls */
+.product-cart-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.product-cart-controls button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+.cart-quantity-container {
+  display: flex;
+}
+.failure-view {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.failer-view-img {
+  height: 50%;
+  width: 50%;
+  padding-bottom: 5%;
+}
+/* Similar Products 
+.similar-products-container {
+  margin-top: 30px;
+}
+
+.products-list {
+  display: flex;
+  gap: 15px;
+}
+
+.product-card {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  flex: 1;
+}
+
+.product-card img {
+  width: 100%;
+  max-width: 150px;
+  border-radius: 5px;
+}
+*/

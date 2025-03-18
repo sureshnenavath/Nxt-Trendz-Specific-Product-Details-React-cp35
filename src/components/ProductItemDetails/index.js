@@ -1,21 +1,10 @@
 import {Component} from 'react'
 import Loader from 'react-loader-spinner'
-import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
+import {FaPlusCircle, FaMinusCircle} from 'react-icons/fa'
 import Cookies from 'js-cookie'
 import Header from '../Header'
+import ProductCard from '../ProductCard'
 import './index.css'
-/* const updatedProductData = data[0].map(eachItem => ({
-          availability: eachItem.availability,
-          brand: eachItem.brand,
-          description: eachItem.description,
-          id: eachItem.id,
-          imageUrl: eachItem.image_url,
-          price: eachItem.price,
-          rating: eachItem.rating,
-          style: eachItem.style,
-          title: eachItem.title,
-          totalReviews: eachItem.total_reviews,
-        })) */
 
 const apiStatusConstants = {
   initial: 'INITIAL',
@@ -27,18 +16,18 @@ const apiStatusConstants = {
 class ProductItemDetails extends Component {
   state = {
     apiStatus: apiStatusConstants.initial,
-    productItemsDataInState: [],
+    productItemsDataInState: null,
     similarProducts: [],
     productCartCount: 1,
   }
+
   componentDidMount() {
     this.getData()
   }
 
   getData = async () => {
-    this.setState({
-      apiStatus: apiStatusConstants.inProgress,
-    })
+    this.setState({apiStatus: apiStatusConstants.inProgress})
+
     const getToken = Cookies.get('jwt_token')
     if (!getToken) {
       console.log('No Token Found')
@@ -51,14 +40,11 @@ class ProductItemDetails extends Component {
 
     const options = {
       method: 'GET',
-      headers: {
-        Authorization: `Bearer ${getToken}`,
-      },
+      headers: {Authorization: `Bearer ${getToken}`},
     }
 
     try {
       const response = await fetch(productDetailsApiUrl, options)
-      console.log('Response Status:', response.status)
 
       if (response.ok) {
         const data = await response.json()
@@ -74,6 +60,7 @@ class ProductItemDetails extends Component {
           title: data.title,
           totalReviews: data.total_reviews,
         }
+
         const updatedSimilarProducts = data.similar_products.map(eachItem => ({
           availability: eachItem.availability,
           brand: eachItem.brand,
@@ -86,95 +73,119 @@ class ProductItemDetails extends Component {
           title: eachItem.title,
           totalReviews: eachItem.total_reviews,
         }))
+
         this.setState({
           apiStatus: apiStatusConstants.success,
           productItemsDataInState: updatedProductData,
           similarProducts: updatedSimilarProducts,
         })
-      } else if (response.status === 401) {
-        this.setState({
-          apiStatus: apiStatusConstants.failure,
-        })
       } else {
-        this.setState({
-          apiStatus: apiStatusConstants.failure,
-        })
+        this.setState({apiStatus: apiStatusConstants.failure})
       }
     } catch (error) {
       console.log('Fetch Error:', error)
+      this.setState({apiStatus: apiStatusConstants.failure})
     }
   }
+
+  increaseProductCartCount = () => {
+    this.setState(prevState => ({
+      productCartCount: prevState.productCartCount + 1,
+    }))
+  }
+
+  decreaseProductCartCount = () => {
+    this.setState(prevState => ({
+      productCartCount:
+        prevState.productCartCount > 1 ? prevState.productCartCount - 1 : 1,
+    }))
+  }
+
   renderLoadingView = () => (
     <div className="primedeals-loader-container">
       <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     </div>
   )
+
   handleContinueShopping = () => {
     const {history} = this.props
-    return history.replace('/products')
+    history.replace('/products')
   }
+
   renderFailureView = () => (
-    <>
+    <div className="failure-view">
       <img
-        src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-error-view-img.png "
+        src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-error-view-img.png"
         alt="error view"
-        className="register-prime-image"
+        className="failer-view-img"
       />
       <button onClick={this.handleContinueShopping}>Continue Shopping</button>
-    </>
+    </div>
   )
-  increaseProductCartCount = () => {
-    const {productCartCount} = this.state
-    this.setState(prevState => {
-      productCartCount: prevState + 1
-    })
-  }
-  decreaseProductCartCount = () => {
-    const {productCartCount} = this.state
-    if (productCartCount > 0) {
-      this.setState(prevState => {
-        productCartCount: prevState - 1
-      })
-    } else {
-      this.setState({productCartCount: 1})
-    }
-  }
+
   renderProductItem = () => {
-    const {productItemsDataInState, productCartCount} = this.state
+    const {productItemsDataInState, productCartCount, similarProducts} =
+      this.state
+
+    if (!productItemsDataInState) return null
+
     return (
-      <div className="main-product-details">
-        <div className="product-details-image-container">
-          <img
-            src={productItemsDataInState.imageUrl}
-            alt={productItemsDataInState.id}
-            className="product-details-image"
-          />
+      <div className="main-container">
+        <div className="main-product-details">
+          <div className="product-details-image-container">
+            <img
+              src={productItemsDataInState.imageUrl}
+              alt={productItemsDataInState.title}
+              className="product-details-image"
+            />
+          </div>
+          <div className="product-details-content">
+            <h1>{productItemsDataInState.title}</h1>
+            <p>Rs {productItemsDataInState.price}/-</p>
+            <div>
+              <p>
+                <img
+                  src="https://assets.ccbp.in/frontend/react-js/star-img.png "
+                  alt="star"
+                />{' '}
+                {productItemsDataInState.rating}
+              </p>
+              <p>({productItemsDataInState.totalReviews} Reviews)</p>
+            </div>
+            <p>{productItemsDataInState.description}</p>
+            <p>
+              <strong>Available:</strong> {productItemsDataInState.availability}
+            </p>
+            <p>
+              <strong>Brand:</strong> {productItemsDataInState.brand}
+            </p>
+            <div className="cart-quantity-container">
+              <button onClick={this.decreaseProductCartCount}>
+                <FaMinusCircle />
+              </button>
+              <p>{productCartCount}</p>
+              <button onClick={this.increaseProductCartCount}>
+                <FaPlusCircle />
+              </button>
+            </div>
+            <button className="add-to-cart-btn">ADD TO CART</button>
+          </div>
         </div>
-        <div className="product-details-content">
-          <h1>{productItemsDataInState.title}</h1>
-          <p>{productItemsDataInState.price}</p>
-          <div>
-            <p>{productItemsDataInState.rating}</p>
-            <p>{productItemsDataInState.totalReviews}</p>
-          </div>
-          <p>{productItemsDataInState.description}</p>
-          <p>Available {productItemsDataInState.availability}</p>
-          <p>Brand {productItemsDataInState.brand}</p>
-          <div>
-            <button onClick={this.increaseProductCartCount}>
-              <FaPlusCircle />
-            </button>
-            <p>{productCartCount}</p>
-            <button onClick={this.decreaseProductCartCount}>
-              <FaMinusCircle />
-            </button>
-          </div>
+        <div className="similar-products-container">
+          <h2>Similar Products</h2>
+          <ul className="products-list">
+            {similarProducts.map(eachItem => (
+              <ProductCard productData={eachItem} key={eachItem.id} />
+            ))}
+          </ul>
         </div>
       </div>
     )
   }
+
   render() {
     const {apiStatus} = this.state
+
     switch (apiStatus) {
       case apiStatusConstants.success:
         return (
@@ -190,7 +201,6 @@ class ProductItemDetails extends Component {
             {this.renderFailureView()}
           </>
         )
-
       case apiStatusConstants.inProgress:
         return this.renderLoadingView()
       default:
