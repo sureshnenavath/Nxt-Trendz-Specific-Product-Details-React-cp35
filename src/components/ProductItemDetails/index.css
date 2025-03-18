@@ -1,0 +1,16 @@
+/* Write your CSS here */
+.main-product-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 1%;
+}
+.product-details-image-container{
+    margin-left: 200px ;
+}
+.product-details-image {
+  height: 100%;
+  width: 100%;
+}
