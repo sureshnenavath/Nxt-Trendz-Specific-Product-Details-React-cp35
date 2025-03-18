@@ -1,6 +1,6 @@
 import {Component} from 'react'
 import Loader from 'react-loader-spinner'
-import {FaPlusCircle, FaMinusCircle} from 'react-icons/fa'
+import {BsPlusSquare, BsDashSquare} from 'react-icons/bs'
 import Cookies from 'js-cookie'
 import Header from '../Header'
 import ProductCard from '../ProductCard'
@@ -102,7 +102,7 @@ class ProductItemDetails extends Component {
   }
 
   renderLoadingView = () => (
-    <div className="primedeals-loader-container">
+    <div data-testid="loader" className="primedeals-loader-container">
       <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     </div>
   )
@@ -116,9 +116,10 @@ class ProductItemDetails extends Component {
     <div className="failure-view">
       <img
         src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-error-view-img.png"
-        alt="error view"
+        alt="failure view"
         className="failer-view-img"
       />
+      <h1>Product Not Found</h1>
       <button onClick={this.handleContinueShopping}>Continue Shopping</button>
     </div>
   )
@@ -135,7 +136,7 @@ class ProductItemDetails extends Component {
           <div className="product-details-image-container">
             <img
               src={productItemsDataInState.imageUrl}
-              alt={productItemsDataInState.title}
+              alt="product"
               className="product-details-image"
             />
           </div>
@@ -145,7 +146,7 @@ class ProductItemDetails extends Component {
             <div>
               <p>
                 <img
-                  src="https://assets.ccbp.in/frontend/react-js/star-img.png "
+                  src="https://assets.ccbp.in/frontend/react-js/star-img.png"
                   alt="star"
                 />{' '}
                 {productItemsDataInState.rating}
@@ -160,22 +161,34 @@ class ProductItemDetails extends Component {
               <strong>Brand:</strong> {productItemsDataInState.brand}
             </p>
             <div className="cart-quantity-container">
-              <button onClick={this.decreaseProductCartCount}>
-                <FaMinusCircle />
+              <button
+                className="product-details-buttons"
+                data-testid="minus"
+                onClick={this.decreaseProductCartCount}
+              >
+                <BsDashSquare />
               </button>
               <p>{productCartCount}</p>
-              <button onClick={this.increaseProductCartCount}>
-                <FaPlusCircle />
+              <button
+                data-testid="plus"
+                onClick={this.increaseProductCartCount}
+                className="product-details-buttons"
+              >
+                <BsPlusSquare />
               </button>
             </div>
-            <button className="add-to-cart-btn">ADD TO CART</button>
+            <button>ADD TO CART</button>
           </div>
         </div>
         <div className="similar-products-container">
           <h2>Similar Products</h2>
           <ul className="products-list">
             {similarProducts.map(eachItem => (
-              <ProductCard productData={eachItem} key={eachItem.id} />
+              <ProductCard
+                key={eachItem.id}
+                productData={eachItem}
+                imgAltPrefix="similar product"
+              />
             ))}
           </ul>
         </div>
